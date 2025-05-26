@@ -6,13 +6,13 @@
 /*   By: jhualves <jhualves@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 18:54:45 by jhualves          #+#    #+#             */
-/*   Updated: 2025/05/26 03:12:10 by jhualves         ###   ########.fr       */
+/*   Updated: 2025/05/26 15:25:02 by jhualves         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	process_input(t_ctx *ctx, char *input)
+void	process_input(t_ctx *ctx, const char **input)
 {
 	t_token	*tokens;
 	t_cmd	*ast;

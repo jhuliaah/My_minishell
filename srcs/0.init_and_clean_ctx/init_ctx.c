@@ -6,7 +6,7 @@
 /*   By: jhualves <jhualves@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 17:55:10 by jhualves          #+#    #+#             */
-/*   Updated: 2025/05/26 01:28:56 by jhualves         ###   ########.fr       */
+/*   Updated: 2025/05/26 18:51:45 by jhualves         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,7 @@ void	add_env_node(t_ctx *ctx, t_env **list_head, const char *env_str)
 		handle_without_equal(ctx, new_node, env_str);
 	new_node->next = NULL;
 	if (*list_head == NULL)
-	{
 		*list_head = new_node;
-	}
 	else
 	{
 		current = *list_head;
@@ -92,13 +90,16 @@ t_ctx	*init_ctx(t_ctx *ctx, char **env_array)
 	ctx->previous_exit_status = 0;
 	ctx->current_exit_status = 0;
 	ctx->last_error_message = NULL;
-	ctx->allocations = NULL;
-	ctx->sigint_received = false;
-	ctx->sigquit_received = false;
+	ctx->allocations = malloc(sizeof(t_allocation));
+	if (!ctx->allocations)
+	{
+		ft_putstr_fd("minishell: initialization error\n", 2);
+		return (NULL);
+	}
 	ctx->pwd = NULL;
 	ctx->oldpwd = NULL;
 	ctx->is_interactive = isatty(STDIN_FILENO);
 	init_environment(ctx, env_array);
-	setup_signals();
+	//setup_signals();
 	return (ctx);
 }

@@ -6,7 +6,7 @@
 /*   By: jhualves <jhualves@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 15:09:55 by jhualves          #+#    #+#             */
-/*   Updated: 2025/05/26 05:00:13 by jhualves         ###   ########.fr       */
+/*   Updated: 2025/05/26 18:40:34 by jhualves         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,9 @@ int	main(int argc, char **argv, char **env)
 		return (EXIT_FAILURE);
 	}
 	(void)argv;
-	ctx = NULL;
+	ctx = malloc(sizeof(t_ctx));
+	if (!ctx)
+		return (ft_putstr_fd("memory allocation error\n", 2), EXIT_FAILURE);
 	ctx = init_ctx(ctx, env);
 	if (!ctx)
 		return (ft_putstr_fd("minishell: initialization error\n", 2), \
@@ -53,12 +55,7 @@ void	main_loop(t_ctx *ctx, char *input)
 {
 	while (1)
 	{
-		ctx->sigint_received = false;
-		// if (gsignal == SIGINT)
-		// {
-		// 	check_g_signal(ctx, &input);
-		// 	continue ;
-		// }
+		// receive_signal();
 		if (!input)
 		{
 			no_input();

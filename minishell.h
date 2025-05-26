@@ -6,7 +6,7 @@
 /*   By: jhualves <jhualves@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 15:10:26 by jhualves          #+#    #+#             */
-/*   Updated: 2025/05/26 04:47:33 by jhualves         ###   ########.fr       */
+/*   Updated: 2025/05/26 18:43:18 by jhualves         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,6 @@
 # define ERR_EXIT_RANGE_MSG "Exit status out of range"
 # define ERR_UNKNOWN_MSG "Unknown error"
 # define _POSIX_C_SOURCE 200809L
-
-extern volatile sig_atomic_t	g_signal;
 
 typedef enum e_alloc_type {
 	ALLOC_TYPE_GENERIC,
@@ -91,7 +89,6 @@ typedef struct s_redir {
 typedef struct s_token {
 	t_token_type	type;
 	char			*value;
-	int				pos;
 	struct s_token	*next;
 }	t_token;
 
@@ -131,9 +128,6 @@ typedef struct s_ctx {
 	bool					is_interactive;
 	char					*pwd;
 	char					*oldpwd;
-	volatile sig_atomic_t	sigint_received;
-	volatile sig_atomic_t	sigquit_received;
-	struct termios			original_termios;
 }	t_ctx;
 
 // Protótipos de funções
@@ -164,7 +158,7 @@ void	add_env_node(t_ctx *ctx, t_env **list_head, const char *env_var);
 // =============================================================================
 
 // srcs/1.process_input/process_input.c
-void	process_input(t_ctx *ctx, char *input);
+void	process_input(t_ctx *ctx, const char **input);
 
 // =============================================================================
 // srcs/2.tokenizer/
@@ -188,7 +182,7 @@ int		is_valid_var_char(char c);
 
 
 // srcs/2.tokenizer/tokenizer.c
-t_token	*tokenize_input(t_ctx *ctx, const char *input);
+t_token	*tokenize_input(t_ctx *ctx, const char **input);
 void	ft_lstadd_back(t_token **head, t_token *new_node);
 t_token	*new_token(t_ctx *ctx, t_token_type type, const char *str);
 
@@ -240,9 +234,7 @@ int		var_name_length(const char *input);
 // =============================================================================
 
 // srcs/6.signals/signals.c
-void	handle_sigint(int sig);
-void	handle_sigquit(int sig);
-void	setup_signals(void);
+
 
 // =============================================================================
 // srcs/7.memory_mgmt/
@@ -287,9 +279,7 @@ void	process_assignments(t_ctx *ctx, t_cmd *cmd);
 
 // utils/main_utils.c
 void	process_minishell(t_ctx *ctx, char **input);
-void	sigint_true(t_ctx *ctx);
 void	no_input(void);
-void	check_g_signal(t_ctx *ctx, char **input);
 void	input_null(t_ctx *ctx, char **input);
 
 // utils/parsing_utils.c
