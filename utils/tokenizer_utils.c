@@ -6,7 +6,7 @@
 /*   By: jhualves <jhualves@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 20:17:26 by jhualves          #+#    #+#             */
-/*   Updated: 2025/05/26 04:09:51 by jhualves         ###   ########.fr       */
+/*   Updated: 2025/05/26 20:00:12 by jhualves         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,12 @@ static int	substr_handle_squote(t_ctx *ctx, char **str, const char **input)
 	const char	*start;
 	int			len;
 
-	start = (const char *)*input + 1;
+	start = (const char *)*input;
 	len = 0;
 	while (start[len] && start[len] != '\'')
 		len++;
 	*str = ft_safe_strndup(ctx, start, len);
-	*input += len + 2;
+	*input += len + 1;
 	return (len);
 }
 
@@ -45,12 +45,12 @@ static int	substr_handle_dquote(t_ctx *ctx, char **str, const char **input)
 	const char	*start;
 	int			len;
 
-	start = (const char *)*input + 1;
+	start = (const char *)*input;
 	len = 0;
 	while (start[len] && start[len] != '\"')
 		len++;
 	*str = ft_safe_strndup(ctx, start, len);
-	*input += len + 2;
+	*input += len + 1;
 	return (len);
 }
 
@@ -59,20 +59,20 @@ static int	substr_handle_env_var(t_ctx *ctx, char **str, const char **input)
 	const char	*start;
 	int			len;
 
-	if ((*input)[1] == '$')
+	if ((*input)[0] == '$')
 	{
 		get_pid_var(ctx, str);
 		*input += 2;
 		return (2);
 	}
-	start = (const char *)*input + 1;
+	start = (const char *)*input;
 	len = 0;
 	while (start[len] && !ft_isspace(start[len]) && start[len] != '$' \
 			&& start[len] != '\'' && start[len] != '\"')
 		len++;
 	*str = ft_safe_strndup(ctx, start, len);
-	*input += len + 1;
-	return (len + 1);
+	*input += len;
+	return (len);
 }
 
 int	define_substring(t_ctx *ctx, char **str, const char **input, \

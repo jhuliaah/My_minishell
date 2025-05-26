@@ -6,7 +6,7 @@
 /*   By: jhualves <jhualves@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 19:34:30 by jhualves          #+#    #+#             */
-/*   Updated: 2025/05/26 18:55:22 by jhualves         ###   ########.fr       */
+/*   Updated: 2025/05/26 19:41:53 by jhualves         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ t_token	*tokenize_input(t_ctx *ctx, const char **input)
 	t_token	*tokens;
 
 	tokens = NULL;
-	while (*input)
+	while (*input && **input != '\0' && **input != '\n')
 	{
 		if (ft_isspace(**input))
 			(*input)++;
