@@ -6,7 +6,7 @@
 /*   By: jhualves <jhualves@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 23:26:04 by jhualves          #+#    #+#             */
-/*   Updated: 2025/05/26 01:33:34 by jhualves         ###   ########.fr       */
+/*   Updated: 2025/05/27 00:08:10 by jhualves         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ t_cmd	*new_cmd(t_ctx *ctx)
 	cmd->args = safe_malloc(ctx, sizeof(char *), ALLOC_TYPE_STR);
 	cmd->args[0] = NULL;
 	cmd->redirections = NULL;
+	cmd->cmd_path = NULL;
 	cmd->type = CMD_EXTERNAL;
 	cmd->next = NULL;
 	return (cmd);

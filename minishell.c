@@ -6,7 +6,7 @@
 /*   By: jhualves <jhualves@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 15:09:55 by jhualves          #+#    #+#             */
-/*   Updated: 2025/05/26 23:45:47 by jhualves         ###   ########.fr       */
+/*   Updated: 2025/05/27 01:04:11 by jhualves         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,7 @@ void	main_loop(t_ctx *ctx, char *input)
 			input_null(ctx, &input);
 			continue ;
 		}
-		if (input[0] != '\0')
-			process_minishell(ctx, &input);
+		process_minishell(ctx, &input);
 		super_free(ctx);
 	}
 }

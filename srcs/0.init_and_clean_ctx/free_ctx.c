@@ -6,7 +6,7 @@
 /*   By: jhualves <jhualves@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 19:15:54 by jhualves          #+#    #+#             */
-/*   Updated: 2025/05/26 23:44:55 by jhualves         ###   ########.fr       */
+/*   Updated: 2025/05/27 01:09:33 by jhualves         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,21 @@ void	free_context(t_ctx *ctx)
 	if (ctx)
 	{
 		free_all_allocations(ctx);
-		free(ctx->pwd);
-		free(ctx->oldpwd);
-		free(ctx->input);
-		free(ctx->last_error_message);
-		free_env_list(ctx->env_list);
+		if (ctx->pwd)
+			free(ctx->pwd);
+		if (ctx->oldpwd)
+			free(ctx->oldpwd);
+		if (ctx->input)
+			free(ctx->input);
+		if (ctx->last_error_message)
+			free(ctx->last_error_message);
+		if (ctx->env_list)
+			free_env_list(ctx->env_list);
+		ctx->pwd = NULL;
+		ctx->oldpwd = NULL;
+		ctx->input = NULL;
+		ctx->last_error_message = NULL;
+		ctx->env_list = NULL;
 		free(ctx);
 	}
 }
@@ -43,6 +53,14 @@ void	free_all_allocations(t_ctx *ctx)
 			free_redir_list(alloc->ptr);
 		else if (alloc->type == ALLOC_TYPE_STR)
 			free_string_array(alloc->ptr);
+		else if (alloc->type == ALLOC_TYPE_ENV_NODE)
+			free_env_list(alloc->ptr);
+		else if (alloc->type == ALLOC_TYPE_STRING)
+			free(alloc->ptr);
+		else if (alloc->type == ALLOC_TYPE_GENERIC)
+			free(alloc->ptr);
+		else if (alloc->type == ALLOC_TYPE_CTX)
+			free_context(alloc->ptr);
 		else if (alloc->ptr)
 			free(alloc->ptr);
 		free(alloc);
@@ -66,6 +84,8 @@ void	safe_free(t_ctx *ctx, void *ptr)
 	t_allocation	*current;
 	t_allocation	*prev;
 
+	if (!ptr || !ctx || !ctx->allocations)
+		return ;
 	current = ctx->allocations;
 	prev = NULL;
 	while (current)

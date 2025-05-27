@@ -1,6 +1,6 @@
 # Compiler and Flags
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -g3 -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -g3 #-fsanitize=address
 IFLAGS = -I./Libft42 -I. -I/usr/include/readline
 LDFLAGS = -L./Libft42 -lft -lreadline
 
