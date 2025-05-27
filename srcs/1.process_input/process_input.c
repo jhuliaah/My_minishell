@@ -6,7 +6,7 @@
 /*   By: jhualves <jhualves@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 18:54:45 by jhualves          #+#    #+#             */
-/*   Updated: 2025/05/26 22:39:44 by jhualves         ###   ########.fr       */
+/*   Updated: 2025/05/26 23:47:35 by jhualves         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ void	process_input(t_ctx *ctx, const char **input)
 	t_token	*tokens;
 	t_cmd	*ast;
 
-	ctx->token_list = tokenize_input(ctx, input);
+	tokens = tokenize_input(ctx, input);
+	ctx->token_list = tokens;
 	if (!tokens)
 	{
 		ctx->exit_status = 2;

@@ -6,11 +6,13 @@
 /*   By: jhualves <jhualves@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 19:34:30 by jhualves          #+#    #+#             */
-/*   Updated: 2025/05/26 22:48:04 by jhualves         ###   ########.fr       */
+/*   Updated: 2025/05/26 23:03:54 by jhualves         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	token_error_check(t_ctx *ctx, t_token **head);
 
 t_token	*tokenize_input(t_ctx *ctx, const char **input)
 {
@@ -32,10 +34,7 @@ t_token	*tokenize_input(t_ctx *ctx, const char **input)
 		else
 			token_handle_word(ctx, input, &tokens);
 		if (!token_error_check(ctx, &tokens))
-		{
-			print_error(ctx, "Tokenization error", -1, 2);
 			return (NULL);
-		}
 	}
 	ft_lstadd_back(&tokens, new_token(ctx, END, NULL));
 	return (tokens);
@@ -74,7 +73,21 @@ t_token	*new_token(t_ctx *ctx, t_token_type type, const char *str)
 	return (token);
 }
 
-int	token_error_check(t_ctx *ctx, t_token **tokens)
+static int	token_error_check(t_ctx *ctx, t_token **head)
 {
-	
+	t_token	*current;
+
+	if (!head)
+		return (0);
+	current = *head;
+	while (current)
+	{
+		if (current->type == ERROR)
+		{
+			print_error(ctx, "Tokenization error", -1, 2);
+			return (0);
+		}
+		current = current->next;
+	}
+	return (1);
 }

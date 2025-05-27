@@ -6,7 +6,7 @@
 /*   By: jhualves <jhualves@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 19:15:54 by jhualves          #+#    #+#             */
-/*   Updated: 2025/05/26 01:33:34 by jhualves         ###   ########.fr       */
+/*   Updated: 2025/05/26 23:44:55 by jhualves         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,12 @@ void	free_all_allocations(t_ctx *ctx)
 	ctx->allocations = NULL;
 }
 
-void	super_free(t_ctx *ctx, char **input)
+void	super_free(t_ctx *ctx)
 {
-	if (*input)
+	if (ctx->input)
 	{
-		free(*input);
-		input = NULL;
+		free(ctx->input);
+		ctx->input = NULL;
 	}
 	free_all_allocations(ctx);
 }

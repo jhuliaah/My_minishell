@@ -6,7 +6,7 @@
 /*   By: jhualves <jhualves@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 20:12:24 by jhualves          #+#    #+#             */
-/*   Updated: 2025/05/26 22:54:57 by jhualves         ###   ########.fr       */
+/*   Updated: 2025/05/26 23:02:47 by jhualves         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,6 @@ static int	closed_quotation(t_ctx *ctx, const char **input)
 			return (1);
 		i++;
 	}
-	print_error(ctx, "Unclosed quotation", -1, 2);
+	syntax_error(ctx, "Unclosed quotation");
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: jhualves <jhualves@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 15:10:26 by jhualves          #+#    #+#             */
-/*   Updated: 2025/05/26 22:49:12 by jhualves         ###   ########.fr       */
+/*   Updated: 2025/05/26 23:45:32 by jhualves         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,7 @@ typedef struct s_ctx {
 // srcs/0.init_and_clean_ctx/free_ctx.c
 void	free_context(t_ctx *ctx);
 void	free_all_allocations(t_ctx *ctx);
-void	super_free(t_ctx *ctx, char **input);
+void	super_free(t_ctx *ctx);
 void	safe_free(t_ctx *ctx, void *ptr);
 
 // srcs/0.init_and_clean_ctx/free_lists.c
