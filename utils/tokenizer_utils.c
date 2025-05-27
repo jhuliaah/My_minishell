@@ -6,7 +6,7 @@
 /*   By: jhualves <jhualves@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 20:17:26 by jhualves          #+#    #+#             */
-/*   Updated: 2025/05/26 20:00:12 by jhualves         ###   ########.fr       */
+/*   Updated: 2025/05/26 21:36:17 by jhualves         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static int	substr_handle_squote(t_ctx *ctx, char **str, const char **input)
 
 	start = (const char *)*input;
 	len = 0;
-	while (start[len] && start[len] != '\'')
+	while (start[len] != '\0' && start[len] != '\'')
 		len++;
 	*str = ft_safe_strndup(ctx, start, len);
 	*input += len + 1;

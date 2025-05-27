@@ -6,7 +6,7 @@
 /*   By: jhualves <jhualves@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 15:10:26 by jhualves          #+#    #+#             */
-/*   Updated: 2025/05/26 18:43:18 by jhualves         ###   ########.fr       */
+/*   Updated: 2025/05/26 21:04:05 by jhualves         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,8 +123,6 @@ typedef struct s_ctx {
 	int						current_exit_status;
 	char					*last_error_message;
 	t_allocation			*allocations;
-	bool					sigint_received;
-	bool					sigquit_received;
 	bool					is_interactive;
 	char					*pwd;
 	char					*oldpwd;
