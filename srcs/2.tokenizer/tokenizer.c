@@ -6,7 +6,7 @@
 /*   By: jhualves <jhualves@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 19:34:30 by jhualves          #+#    #+#             */
-/*   Updated: 2025/05/26 21:51:42 by jhualves         ###   ########.fr       */
+/*   Updated: 2025/05/26 22:48:04 by jhualves         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,15 +31,13 @@ t_token	*tokenize_input(t_ctx *ctx, const char **input)
 			token_handle_env_var(ctx, input, &tokens);
 		else
 			token_handle_word(ctx, input, &tokens);
-		if (!token_error_check(ctx, input, &tokens))
+		if (!token_error_check(ctx, &tokens))
 		{
 			print_error(ctx, "Tokenization error", -1, 2);
-			free_token_list(tokens);
 			return (NULL);
 		}
 	}
 	ft_lstadd_back(&tokens, new_token(ctx, END, NULL));
-	ctx->token_list = tokens;
 	return (tokens);
 }
 
@@ -74,4 +72,9 @@ t_token	*new_token(t_ctx *ctx, t_token_type type, const char *str)
 		token->value = safe_strdup(ctx, str);
 	token->next = NULL;
 	return (token);
+}
+
+int	token_error_check(t_ctx *ctx, t_token **tokens)
+{
+	
 }

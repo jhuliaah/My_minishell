@@ -6,7 +6,7 @@
 /*   By: jhualves <jhualves@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 20:14:35 by jhualves          #+#    #+#             */
-/*   Updated: 2025/05/25 23:38:54 by jhualves         ###   ########.fr       */
+/*   Updated: 2025/05/26 22:53:57 by jhualves         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	token_handle_redir(t_ctx *ctx, const char **input, t_token **tokens)
 	{
 		if (c == '<')
 			type = REDIR_IN;
-		else
+		else if (c == '>')
 			type = REDIR_OUT;
 		(*input)--;
 	}

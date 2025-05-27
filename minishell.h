@@ -6,7 +6,7 @@
 /*   By: jhualves <jhualves@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 15:10:26 by jhualves          #+#    #+#             */
-/*   Updated: 2025/05/26 21:04:05 by jhualves         ###   ########.fr       */
+/*   Updated: 2025/05/26 22:49:12 by jhualves         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,8 @@ typedef enum e_token_type {
 	DQUOTE,
 	ENV_VAR,
 	ASSIGNMENT_VAR,
-	END
+	END,
+	ERROR
 }	t_token_type;
 
 typedef enum e_redir_type {
