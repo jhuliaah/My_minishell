@@ -6,7 +6,7 @@
 /*   By: jhualves <jhualves@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 18:54:45 by jhualves          #+#    #+#             */
-/*   Updated: 2025/05/26 15:25:02 by jhualves         ###   ########.fr       */
+/*   Updated: 2025/05/26 22:00:27 by jhualves         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,20 +21,19 @@ void	process_input(t_ctx *ctx, const char **input)
 	if (!tokens)
 	{
 		ctx->exit_status = 2;
-		return (free_all_allocations(ctx));
+		return ;
 	}
 	if (!validate_syntax(ctx, tokens))
 	{
 		ctx->exit_status = 2;
-		return (free_all_allocations(ctx));
+		return ;
 	}
 	ast = parse_tokens(ctx, &tokens);
 	if (!ast)
 	{
 		ctx->exit_status = 2;
-		return (free_all_allocations(ctx));
+		return ;
 	}
 	//expand_ast(ctx, ast);
 	//execute_ast(ctx, ast);
-	free_all_allocations(ctx);
 }
