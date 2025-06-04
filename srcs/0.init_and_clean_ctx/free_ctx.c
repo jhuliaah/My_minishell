@@ -6,7 +6,7 @@
 /*   By: jhualves <jhualves@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 19:15:54 by jhualves          #+#    #+#             */
-/*   Updated: 2025/06/03 21:10:30 by jhualves         ###   ########.fr       */
+/*   Updated: 2025/06/04 20:55:52 by jhualves         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,31 +39,31 @@ void	free_context(t_ctx *ctx)
 
 void	free_all_allocations(t_ctx *ctx)
 {
-	t_allocation	*alloc;
-	t_allocation	*next;
+	// t_allocation	*alloc;
+	// t_allocation	*next;
+	// t_cmd		*cmd_list;
+	// t_redir		*redir_list;
+	// t_token	*token_list;
 
 	alloc = ctx->allocations;
+	
 	while (alloc)
 	{
 		next = alloc->next;
 		if (alloc->type == ALLOC_TYPE_CMD)
 			free_cmd_list(alloc->ptr);
-		else if (alloc->type == ALLOC_TYPE_TOKEN)
-			free_token_list(alloc->ptr);
 		else if (alloc->type == ALLOC_TYPE_REDIR)
 			free_redir_list(alloc->ptr);
 		else if (alloc->type == ALLOC_TYPE_STR)
 			free_string_array(alloc->ptr);
-		else if (alloc->type == ALLOC_TYPE_ENV_NODE)
-			free_env_list(alloc->ptr);
-		else if (alloc->type == ALLOC_TYPE_CTX)
-			free_context(alloc->ptr);
 		else if (alloc->type == ALLOC_TYPE_STRING \
 			|| alloc->type == ALLOC_TYPE_GENERIC)
 		{
 			free(alloc->ptr);
 			alloc->ptr = NULL;
 		}
+		else
+			alloc->ptr = NULL;
 		free(alloc);
 		alloc = next;
 	}

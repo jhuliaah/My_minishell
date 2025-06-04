@@ -6,7 +6,7 @@
 /*   By: jhualves <jhualves@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 15:10:26 by jhualves          #+#    #+#             */
-/*   Updated: 2025/05/26 23:45:32 by jhualves         ###   ########.fr       */
+/*   Updated: 2025/06/04 20:47:03 by jhualves         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,15 +200,15 @@ bool	validate_syntax(t_ctx *ctx, t_token *tokens);
 // =============================================================================
 
 // srcs/4.parser/handle_cmd.c
-void	handle_pipe(t_ctx *ctx, t_token **tmp, t_cmd **current);
+void	handle_pipe(t_token **tmp, t_cmd **current);
 void	handle_redir(t_ctx *ctx, t_token **tmp, t_cmd *current);
-void	handle_word(t_ctx *ctx, t_token **tmp, t_cmd *current);
+void	handle_word(t_token **tmp, t_cmd *current);
 void	handle_dquote(t_ctx *ctx, t_token **tmp, t_cmd *current);
 void	handle_squote(t_ctx *ctx, t_token **tmp, t_cmd *current);
 
 // srcs/4.parser/handle_cmd_1.c
 void	handle_assignment_var(t_ctx *ctx, t_token **tmp, t_cmd *current);
-void	handle_env_var(t_ctx *ctx, t_token **tmp, t_cmd *current);
+void	handle_env_var(t_token **tmp, t_cmd *current);
 void	handle_parse_error(t_ctx *ctx, t_token **tmp);
 
 // srcs/4.parser/parsing.c
@@ -282,9 +282,9 @@ void	no_input(void);
 void	input_null(t_ctx *ctx, char **input);
 
 // utils/parsing_utils.c
-void	add_arg(t_ctx *ctx, t_cmd *cmd, char *value);
-void	add_redir(t_ctx *ctx, t_cmd *cmd, t_redir_type type, char *file);
-t_cmd	*new_cmd(t_ctx *ctx);
+void	add_arg(t_cmd *cmd, char *value);
+void	add_redir(t_cmd *cmd, t_redir_type type, char *file);
+t_cmd	*new_cmd(void);
 
 // utils/safe_split.c
 // static size_t	count_words(const char *s, char c);
@@ -304,9 +304,8 @@ char	*safe_strtrim(t_ctx *ctx, char const *s1, char const *set);
 char	*safe_strjoin(t_ctx *ctx, char const *s1, char const *s2);
 
 // utils/tokenizer_utils.c
-int		define_substring(t_ctx *ctx, char **str,const char **input, \
-		t_token_type type);
-void	get_pid_var(t_ctx *ctx, char **str);
+int		define_substring(char **str, const char **input, t_token_type type);
+void	get_pid_var(char **str);
 
 // =============================================================================
 // minishell.c (main program file)
