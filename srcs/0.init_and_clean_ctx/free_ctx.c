@@ -6,7 +6,7 @@
 /*   By: jhualves <jhualves@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 19:15:54 by jhualves          #+#    #+#             */
-/*   Updated: 2025/05/27 01:09:33 by jhualves         ###   ########.fr       */
+/*   Updated: 2025/06/03 21:10:30 by jhualves         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ void	free_context(t_ctx *ctx)
 		ctx->env_list = NULL;
 		free(ctx);
 	}
+	ctx = NULL;
 }
 
 void	free_all_allocations(t_ctx *ctx)
@@ -55,14 +56,14 @@ void	free_all_allocations(t_ctx *ctx)
 			free_string_array(alloc->ptr);
 		else if (alloc->type == ALLOC_TYPE_ENV_NODE)
 			free_env_list(alloc->ptr);
-		else if (alloc->type == ALLOC_TYPE_STRING)
-			free(alloc->ptr);
-		else if (alloc->type == ALLOC_TYPE_GENERIC)
-			free(alloc->ptr);
 		else if (alloc->type == ALLOC_TYPE_CTX)
 			free_context(alloc->ptr);
-		else if (alloc->ptr)
+		else if (alloc->type == ALLOC_TYPE_STRING \
+			|| alloc->type == ALLOC_TYPE_GENERIC)
+		{
 			free(alloc->ptr);
+			alloc->ptr = NULL;
+		}
 		free(alloc);
 		alloc = next;
 	}

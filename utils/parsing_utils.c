@@ -6,7 +6,7 @@
 /*   By: jhualves <jhualves@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 23:26:04 by jhualves          #+#    #+#             */
-/*   Updated: 2025/05/27 00:08:10 by jhualves         ###   ########.fr       */
+/*   Updated: 2025/06/03 22:34:40 by jhualves         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ t_cmd	*new_cmd(t_ctx *ctx)
 
 	cmd = safe_malloc(ctx, sizeof(t_cmd), ALLOC_TYPE_CMD);
 	cmd->args = safe_malloc(ctx, sizeof(char *), ALLOC_TYPE_STR);
+	printf("new_cmd\n");
+	fflush(stdout);
 	cmd->args[0] = NULL;
 	cmd->redirections = NULL;
 	cmd->cmd_path = NULL;
@@ -37,15 +39,22 @@ void	add_arg(t_ctx *ctx, t_cmd *cmd, char *value)
 		count++;
 	new_args = safe_malloc(ctx, sizeof(char *) * (count + 2), \
 	ALLOC_TYPE_STR);
+	printf("add_arg\n");
+	fflush(stdout);
 	i = 0;
 	while (cmd->args[i])
 	{
 		new_args[i] = cmd->args[i];
+		printf("%s é o new_arg \n", new_args[i]);
+		fflush(stdout);
 		i++;
+		//preocupante
 	}
 	new_args[i] = safe_strdup(ctx, value);
+	printf("%s é o new_arg \n", new_args[i]);
+	fflush(stdout);
 	new_args[i + 1] = NULL;
-	free(cmd->args);
+	safe_free(ctx, cmd->args);
 	cmd->args = new_args;
 }
 
