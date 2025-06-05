@@ -6,7 +6,7 @@
 /*   By: jhualves <jhualves@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 23:26:04 by jhualves          #+#    #+#             */
-/*   Updated: 2025/06/04 22:08:06 by jhualves         ###   ########.fr       */
+/*   Updated: 2025/06/04 22:31:59 by jhualves         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,6 @@ t_cmd	*new_cmd(void)
 
 	cmd = malloc(sizeof(t_cmd));
 	cmd->args = malloc(sizeof(char *));
-	printf("new_cmd\n");
-	fflush(stdout);
 	cmd->args[0] = NULL;
 	cmd->redirections = NULL;
 	cmd->cmd_path = NULL;
@@ -45,8 +43,6 @@ void	add_arg(t_cmd *cmd, char *value)
 		i++;
 	}
 	new_args[i] = ft_strdup(value);
-	printf("%s é o new_arg \n", new_args[i]);
-	fflush(stdout);
 	new_args[i + 1] = NULL;
 	free(cmd->args);
 	cmd->args = new_args;
