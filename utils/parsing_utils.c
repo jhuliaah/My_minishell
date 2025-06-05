@@ -6,7 +6,7 @@
 /*   By: jhualves <jhualves@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 23:26:04 by jhualves          #+#    #+#             */
-/*   Updated: 2025/06/04 20:44:02 by jhualves         ###   ########.fr       */
+/*   Updated: 2025/06/04 22:08:06 by jhualves         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,16 +38,11 @@ void	add_arg(t_cmd *cmd, char *value)
 	while (cmd->args[count])
 		count++;
 	new_args = malloc(sizeof(char *) * (count + 2));
-	// printf("add_arg\n");
-	fflush(stdout);
 	i = 0;
 	while (cmd->args[i])
 	{
 		new_args[i] = cmd->args[i];
-		printf("%s é o new_arg \n", new_args[i]);
-		fflush(stdout);
 		i++;
-		//preocupante
 	}
 	new_args[i] = ft_strdup(value);
 	printf("%s é o new_arg \n", new_args[i]);

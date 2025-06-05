@@ -6,7 +6,7 @@
 /*   By: jhualves <jhualves@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 15:10:26 by jhualves          #+#    #+#             */
-/*   Updated: 2025/06/04 20:47:03 by jhualves         ###   ########.fr       */
+/*   Updated: 2025/06/04 22:10:53 by jhualves         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -311,6 +311,6 @@ void	get_pid_var(char **str);
 // minishell.c (main program file)
 // =============================================================================
 int		main(int argc, char **argv, char **env);
-void	main_loop(t_ctx *ctx, char *input);
+void	main_loop(t_ctx *ctx);
 
 #endif

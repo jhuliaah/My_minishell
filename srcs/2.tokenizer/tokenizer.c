@@ -6,7 +6,7 @@
 /*   By: jhualves <jhualves@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 19:34:30 by jhualves          #+#    #+#             */
-/*   Updated: 2025/06/04 18:20:51 by jhualves         ###   ########.fr       */
+/*   Updated: 2025/06/04 22:23:59 by jhualves         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ t_token	*tokenize_input(t_ctx *ctx, const char **input)
 		if (!token_error_check(ctx, &tokens))
 			return (free_token_list(tokens), NULL);
 	}
-	ft_lstadd_back(&tokens, new_token(ctx, END, NULL));
+	ft_lstadd_back(&tokens, new_token(ctx, END, "NULL"));
 	return (tokens);
 }
 

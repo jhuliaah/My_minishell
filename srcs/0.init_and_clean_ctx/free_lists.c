@@ -6,7 +6,7 @@
 /*   By: jhualves <jhualves@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 19:15:54 by jhualves          #+#    #+#             */
-/*   Updated: 2025/05/27 02:35:27 by jhualves         ###   ########.fr       */
+/*   Updated: 2025/06/04 22:20:37 by jhualves         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ void	free_cmd_list(t_cmd *cmd)
 		free(cmd->cmd_path);
 		cmd->cmd_path = NULL;
 		free_redir_list(cmd->redirections);
-		free(cmd->pipe);
 		free(cmd);
 		cmd = next;
 	}

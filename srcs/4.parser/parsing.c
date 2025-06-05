@@ -6,7 +6,7 @@
 /*   By: jhualves <jhualves@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 18:14:35 by jhualves          #+#    #+#             */
-/*   Updated: 2025/06/04 20:49:10 by jhualves         ###   ########.fr       */
+/*   Updated: 2025/06/04 22:19:21 by jhualves         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ t_cmd	*parse_tokens(t_ctx *ctx, t_token **tokens)
 		else if (tmp->type == ENV_VAR || tmp->type == ASSIGNMENT_VAR)
 			handle_variables(ctx, &tmp, current);
 		else
-			handle_error(ctx, "Parsing error", -1, 2);
+			return (handle_error(ctx, "Parsing error", -1, 2), NULL);
 	}
 	return (head);
 }

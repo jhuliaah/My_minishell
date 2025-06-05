@@ -6,7 +6,7 @@
 /*   By: jhualves <jhualves@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 19:15:54 by jhualves          #+#    #+#             */
-/*   Updated: 2025/06/04 20:57:15 by jhualves         ###   ########.fr       */
+/*   Updated: 2025/06/04 22:27:47 by jhualves         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,8 @@ void	free_all_allocations(t_ctx *ctx)
 {
 	t_allocation	*alloc;
 	t_allocation	*next;
-	// t_cmd		*cmd_list;
-	// t_redir		*redir_list;
-	// t_token	*token_list;
 
 	alloc = ctx->allocations;
-
 	while (alloc)
 	{
 		next = alloc->next;
@@ -72,6 +68,13 @@ void	free_all_allocations(t_ctx *ctx)
 
 void	super_free(t_ctx *ctx)
 {
+	t_cmd		*cmd_list;
+	t_token		*token_list;
+
+	cmd_list = ctx->cmd_list;
+	token_list = ctx->token_list;
+	free_cmd_list(cmd_list);
+	free_token_list(token_list);
 	if (ctx->input)
 	{
 		free(ctx->input);

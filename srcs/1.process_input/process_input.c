@@ -6,7 +6,7 @@
 /*   By: jhualves <jhualves@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 18:54:45 by jhualves          #+#    #+#             */
-/*   Updated: 2025/05/26 23:47:35 by jhualves         ###   ########.fr       */
+/*   Updated: 2025/06/04 22:18:45 by jhualves         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void	process_input(t_ctx *ctx, const char **input)
 		return ;
 	}
 	ast = parse_tokens(ctx, &tokens);
+	ctx->cmd_list = ast;
 	if (!ast)
 	{
 		ctx->exit_status = 2;
