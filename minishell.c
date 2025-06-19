@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhualves <jhualves@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yvieira- <yvieira-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 15:09:55 by jhualves          #+#    #+#             */
-/*   Updated: 2025/06/04 22:10:12 by jhualves         ###   ########.fr       */
+/*   Updated: 2025/06/13 21:35:09 by yvieira-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,23 +51,27 @@ void	main_loop(t_ctx *ctx)
 {
 	char	*prompt;
 	char	*input;
+	char	*free_input;
 
 	while (1)
 	{
+		define_signals();
 		prompt = get_prompt(ctx);
 		input = readline(prompt);
-		// receive_signal();
-		if (!input)
-		{
-			no_input();
-			break ;
-		}
-		else if (input == NULL)
+		free_input = input;
+		if (input == NULL)
 		{
 			input_null(ctx, &input);
+			break ;
+		}
+		if (input[0] == '\0')
+		{
+			free(input);
 			continue ;
 		}
-		process_minishell(ctx, &input);
+		add_history(input);
+		process_input(ctx, (const char **)&input);
 		super_free(ctx);
+		free(free_input);
 	}
 }
