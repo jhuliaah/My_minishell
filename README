@@ -1,0 +1,94 @@
+# My_minishell 🐚
+
+Um shell minimalista em C que replica funcionalidades básicas do bash, desenvolvido como parte do currículo da 42 School.
+
+## ✨ Funcionalidades Principais
+
+- **Execução de comandos** como no bash (`ls`, `grep`, `awk`, etc.)
+- **Redirecionamentos** (`>`, `>>`, `<`, `<<`)
+- **Pipes** (`|`) para encadeamento de comandos
+- **Variáveis de ambiente** (`$PATH`, `$USER`, etc.)
+- **Expansão de variáveis** (`echo $USER`)
+- **Histórico de comandos** (setas para cima/baixo)
+- **Sinais** (Ctrl-C, Ctrl-D, Ctrl-\)
+- **Comandos built-in**:
+  - `cd` (mudar diretório)
+  - `echo` (com opção -n)
+  - `pwd` (mostrar diretório atual)
+  - `export` (definir variáveis de ambiente)
+  - `unset` (remover variáveis)
+  - `env` (listar ambiente)
+  - `exit` (sair do shell)
+
+## 🛠️ Como foi construído
+
+### Arquitetura do Projeto
+
+```
+src/
+├── lexer/         # Análise léxica (tokenização)
+├── parser/        # Análise sintática (árvore de comandos)
+├── executor/      # Execução de comandos
+├── builtins/      # Comandos built-in
+├── utils/         # Funções auxiliares
+├── signals/       # Tratamento de sinais
+└── minishell.c    # Ponto de entrada principal
+```
+
+### Tecnologias e Conceitos
+
+- **Linguagem**: C puro (Norma 42)
+- **Bibliotecas**: readline (histórico e edição de linha)
+- **Gerenciamento de memória**: Free seguro e sem leaks
+- **Processos**: fork(), execve(), waitpid()
+- **Pipes**: pipe(), dup2()
+- **Sinais**: signal(), sigaction()
+- **Parsing**: Árvore sintática e expansão de tokens
+
+## 🚀 Como executar
+
+1. Clone o repositório:
+```bash
+git clone https://github.com/jhuliaah/My_minishell.git
+cd My_minishell
+```
+
+2. Compile com Make:
+```bash
+make
+```
+
+3. Execute o minishell:
+```bash
+./minishell
+```
+
+## � Desafios e Soluções
+
+1. **Pipeline de comandos**:
+   - *Desafio*: Implementar pipes múltiplos (`cmd1 | cmd2 | cmd3`)
+   - *Solução*: Criação recursiva de processos e redirecionamento de file descriptors
+
+2. **Redirecionamentos aninhados**:
+   - *Desafio*: Lidar com combinações como `cmd < in.txt > out.txt`
+   - *Solução*: Sistema de prioridade e restauração de file descriptors
+
+3. **Expansão de variáveis**:
+   - *Desafio*: Expandir `$VAR` no meio de strings (`echo "Hello $USER"`)
+   - *Solução*: Tokenização especial e reconstrução de strings
+
+## 📚 Aprendizados
+
+- Gerenciamento avançado de processos em C
+- Implementação de um lexer/parser básico
+- Trabalho com file descriptors e pipes
+- Manipulação de sinais em programas interativos
+- Gerenciamento rigoroso de memória
+
+## 📝 Licença
+
+Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.
+
+---
+
+Projeto da 42 School(https://42.fr)
