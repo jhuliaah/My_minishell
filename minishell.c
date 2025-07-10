@@ -3,75 +3,90 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yvieira- <yvieira-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/24 15:09:55 by jhualves          #+#    #+#             */
-/*   Updated: 2025/06/13 21:35:09 by yvieira-         ###   ########.fr       */
+/*   Created: 2025/06/26 22:07:06 by jhualves          #+#    #+#             */
+/*   Updated: 2025/07/01 17:21:36 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// volatile sig_atomic_t	g_signal = 0;
+void			execute(t_ctx *ctx);
+void			free_ctx_between_commands(t_ctx *ctx);
 
-static char	*get_prompt(t_ctx *ctx)
-{
-	if (ctx->is_interactive)
-		return ("minishell> ");
-	else
-		return ("");
-}
+volatile sig_atomic_t	g_signal = 0;
 
-int	main(int argc, char **argv, char **env)
+int	main(int argc, char **argv, char **envp)
 {
 	t_ctx	*ctx;
-	int		exit_status;
 
-	if (argc != 1)
-	{
-		ft_putstr_fd("Usage: ./minishell\n", 2);
-		return (EXIT_FAILURE);
-	}
+	(void)argc;
 	(void)argv;
-	ctx = malloc(sizeof(t_ctx));
+	ctx = ft_calloc(1, sizeof(t_ctx));
 	if (!ctx)
-		return (ft_putstr_fd("memory allocation error\n", 2), EXIT_FAILURE);
-	ctx = init_ctx(ctx, env);
-	if (!ctx)
-		return (ft_putstr_fd("minishell: initialization error\n", 2), \
-				EXIT_FAILURE);
-	main_loop(ctx);
-	exit_status = ctx->exit_status;
+	{
+		perror("ft_calloc failed");
+		exit(EXIT_FAILURE);
+	}
+	init_ctx(ctx, envp);
+	ctx = main_loop(ctx);
+	close_all_fds();
 	free_context(ctx);
-	rl_clear_history();
-	return (exit_status);
+	return (g_signal);
 }
 
-void	main_loop(t_ctx *ctx)
+t_ctx	*main_loop(t_ctx *ctx)
 {
-	char	*prompt;
-	char	*input;
-	char	*free_input;
-
 	while (1)
 	{
 		define_signals();
-		prompt = get_prompt(ctx);
-		input = readline(prompt);
-		free_input = input;
-		if (input == NULL)
+		ctx->input = readline("minishell> ");
+		if (g_signal == 130)
 		{
-			input_null(ctx, &input);
+			ctx->exit_status = 130;
+			g_signal = 0;
+		}
+		if (!ctx->input)
+		{
+			printf("exit\n");
 			break ;
 		}
-		if (input[0] == '\0')
-		{
-			free(input);
-			continue ;
-		}
-		add_history(input);
-		process_input(ctx, (const char **)&input);
-		super_free(ctx);
-		free(free_input);
+		if (ft_strlen(ctx->input) > 0)
+			add_history(ctx->input);
+		process_input(ctx, ctx->input);
+		free_ctx_between_commands(ctx);
+	}
+	return (ctx);
+}
+
+void	execute(t_ctx *ctx)
+{
+	if (!ctx || !ctx->cmd_list)
+		return ;
+	if (!ctx->cmd_list->next)
+		execute_one_command(ctx->cmd_list, ctx);
+	else
+		execute_multiple_commands(ctx->cmd_list, ctx);
+}
+
+void	free_ctx_between_commands(t_ctx *ctx)
+{
+	if (!ctx)
+		return ;
+	if (ctx->input)
+	{
+		free(ctx->input);
+		ctx->input = NULL;
+	}
+	if (ctx->token_list)
+	{
+		free_token_list(ctx->token_list);
+		ctx->token_list = NULL;
+	}
+	if (ctx->cmd_list)
+	{
+		free_cmd_list(ctx->cmd_list);
+		ctx->cmd_list = NULL;
 	}
 }

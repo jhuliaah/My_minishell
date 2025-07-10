@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhualves <jhualves@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yvieira- <yvieira-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/15 23:16:58 by jhualves          #+#    #+#             */
-/*   Updated: 2025/06/15 23:17:49 by jhualves         ###   ########.fr       */
+/*   Created: 2025/06/26 22:14:01 by jhualves          #+#    #+#             */
+/*   Updated: 2025/07/02 20:49:20 by yvieira-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 # include <errno.h>
 # include <limits.h>
 # include <sys/fcntl.h>
-# include <string.h>
 # include <stdlib.h>
 # include <string.h>
 # include <unistd.h>
@@ -36,7 +35,7 @@
 # define ERR_GENERAL_MSG "General error"
 # define ERR_MISUSE_SHELL_MSG "Misuse of shell builtins"
 # define ERR_CANT_EXECUTE_MSG "Command invoked cannot execute"
-# define ERR_CMD_NOT_FOUND_MSG "Command not found"
+# define ERR_CMD_NOT_FOUND_MSG "command not found"
 # define ERR_EXIT_ARG_MSG "Invalid argument to exit"
 # define ERR_CTRL_C_MSG "Script terminated by Ctrl-C"
 # define ERR_KILL_9_MSG "Script terminated by kill -9"
@@ -44,8 +43,9 @@
 # define ERR_EXIT_RANGE_MSG "Exit status out of range"
 # define ERR_UNKNOWN_MSG "Unknown error"
 # define _POSIX_C_SOURCE 200809L
-
-//For Execute
+# define ERR_PERMISSION_DENIED "Permission denied"
+# define NOT_EXECUTABLE_MSG "Is a directory"
+//Para Execução
 # define INTERRUPT 128
 # define FORK_ERROR -1
 # define TRUE 1
@@ -55,18 +55,23 @@
 # define SUCCESS   1
 # define FAILED    0
 # define NO_REDIRECT -1
-# define INTERRUPT 128
 # define CMD_NOT_FOUND 127
 # define PERMISSION_DENIED 126
 # define NOT_EXECUTABLE 126
 # define OUT_OF_RANGE 255
 # define BUILTIN_MISUSE 2
-# define FORK_ERROR -1
 # define CMD_NOT_FOUND_MSG	"command not found"
-# define NOT_EXECUTABLE_MSG "Is a directory"
-// # define PATH_MAX    4096
+# define EXPAND_BUFFER_SIZE 4096
 
-typedef enum e_alloc_type {
+typedef struct s_expand_buffer
+{
+	char	*result;
+	char	*cursor;
+	size_t	remaining;
+}	t_expand_buffer;
+
+typedef enum e_alloc_type
+{
 	ALLOC_TYPE_GENERIC,
 	ALLOC_TYPE_CMD,
 	ALLOC_TYPE_TOKEN,
@@ -77,7 +82,8 @@ typedef enum e_alloc_type {
 	ALLOC_TYPE_CTX
 }	t_alloc_type;
 
-typedef enum e_token_type {
+typedef enum e_token_type
+{
 	WORD,
 	PIPE,
 	REDIR_IN,
@@ -93,19 +99,22 @@ typedef enum e_token_type {
 	ERROR
 }	t_token_type;
 
-typedef enum e_redir_type {
+typedef enum e_redir_type
+{
 	REDIR_INPUT,
 	REDIR_OUTPUT,
 	REDIR_HEREDOC,
 	REDIR_APPEND
 }	t_redir_type;
 
-typedef enum e_cmd_type {
+typedef enum e_cmd_type
+{
 	CMD_BUILTIN,
 	CMD_EXTERNAL
 }	t_cmd_type;
 
-typedef struct s_redir {
+typedef struct s_redir
+{
 	t_redir_type	type;
 	char			*filename;
 	int				fd;
@@ -113,13 +122,15 @@ typedef struct s_redir {
 	struct s_redir	*next;
 }	t_redir;
 
-typedef struct s_token {
+typedef struct s_token
+{
 	t_token_type	type;
 	char			*value;
 	struct s_token	*next;
 }	t_token;
 
-typedef struct s_cmd {
+typedef struct s_cmd
+{
 	char			**args;
 	char			*cmd_path;
 	int				pipe[2];
@@ -128,19 +139,22 @@ typedef struct s_cmd {
 	struct s_cmd	*next;
 }	t_cmd;
 
-typedef struct s_env {
+typedef struct s_env
+{
 	char			*key;
 	char			*value;
 	struct s_env	*next;
 }	t_env;
 
-typedef struct s_allocation {
+typedef struct s_allocation
+{
 	void				*ptr;
 	t_alloc_type		type;
 	struct s_allocation	*next;
 }	t_allocation;
 
-typedef struct s_ctx {
+typedef struct s_ctx
+{
 	t_env					*env_list;
 	t_cmd					*cmd_list;
 	t_token					*token_list;
@@ -155,6 +169,8 @@ typedef struct s_ctx {
 	char					*pwd;
 	char					*oldpwd;
 }	t_ctx;
+
+extern volatile sig_atomic_t	g_signal;
 
 // Protótipos de funções
 // =============================================================================
@@ -184,7 +200,7 @@ void	add_env_node(t_ctx *ctx, t_env **list_head, const char *env_var);
 // =============================================================================
 
 // srcs/1.process_input/process_input.c
-void	process_input(t_ctx *ctx, const char **input);
+void	process_input(t_ctx *ctx, const char *input);
 
 // =============================================================================
 // srcs/2.tokenizer/
@@ -219,6 +235,11 @@ t_token	*new_token(t_ctx *ctx, t_token_type type, const char *str);
 bool	validate_syntax(t_ctx *ctx, t_token *tokens);
 bool	check_pipes(t_ctx *ctx, t_token *tokens);
 bool	check_redirections(t_ctx *ctx, t_token *tokens);
+bool	check_initial_pipe(t_ctx *ctx, t_token *tokens);
+bool	check_consecutive_pipes(t_ctx *ctx, t_token *prev, t_token *current);
+bool	check_redirection_syntax(t_ctx *ctx, t_token *current);
+bool	check_final_pipe(t_ctx *ctx, t_token *current);
+bool	is_valid_filename_token(t_token_type type);
 
 // =============================================================================
 // srcs/4.parser/
@@ -227,9 +248,9 @@ bool	check_redirections(t_ctx *ctx, t_token *tokens);
 // srcs/4.parser/handle_cmd.c
 void	handle_pipe(t_token **tmp, t_cmd **current);
 void	handle_redir(t_ctx *ctx, t_token **tmp, t_cmd *current);
-void	handle_word(t_token **tmp, t_cmd *current);
-void	handle_dquote(t_ctx *ctx, t_token **tmp, t_cmd *current);
-void	handle_squote(t_ctx *ctx, t_token **tmp, t_cmd *current);
+void	handle_word(t_ctx *ctx, t_token **tmp, t_cmd *current);
+void	handle_dquote(t_ctx *ctx, t_token **tmp, t_cmd **current);
+void	handle_squote(t_ctx *ctx, t_token **tmp, t_cmd **current);
 
 // srcs/4.parser/handle_cmd_1.c
 void	handle_assignment_var(t_ctx *ctx, t_token **tmp, t_cmd *current);
@@ -238,23 +259,23 @@ void	handle_parse_error(t_ctx *ctx, t_token **tmp);
 
 // srcs/4.parser/parsing.c
 t_cmd	*parse_tokens(t_ctx *ctx, t_token **tokens);
-int		only_var_assignments(t_token **tokens);
-void	set_type_word(t_token **tokens);
+int		only_var_assignments(t_token *tokens);
+void	set_type_word(t_token *tokens);
+char	*remove_quotes(char *str);
 
 // =============================================================================
 // srcs/5.expander/
 // =============================================================================
 
-// srcs/5.expander/quotes_expánder.c
+// srcs/5.expander/quotes_expander.c
 char	*expand_dquotes(t_ctx *ctx, const char *input);
 char	*get_env_value(t_ctx *ctx, const char *key);
 int		var_name_length(const char *input);
 char	*expand_env_var(t_ctx *ctx, const char *input, int *len);
+
 // srcs/5.expander/string_expander.c
 int		is_valid_dollar(char c);
 char	*expand_string(t_ctx *ctx, const char *input);
-
-// static int	ft_isalpha_upper(int c); // Static prototype
 
 // =============================================================================
 // srcs/6.signals/
@@ -262,6 +283,8 @@ char	*expand_string(t_ctx *ctx, const char *input);
 void	define_execute_signals(int child_pid);
 void	define_signals(void);
 void	define_heredoc_signals(int child_pid);
+void	define_interactive_signals(void);
+void	define_non_interactive_signals(void);
 
 // =============================================================================
 // srcs/7.memory_mgmt/
@@ -312,7 +335,7 @@ int		wait_for_child(int child_pid, int is_last_child, t_ctx *ctx);
 int		wait_for_children(int children_pid[1024], t_ctx *ctx);
 
 // redirects
-void	redirect_fd(int fd_to_redirect, int fd_location);
+int		redirect_fd(int fd_to_redirect, int fd_location);
 void	redirect_fds(int fd_in, int fd_out);
 char	get_next_redirect(char *cmd);
 void	close_all_fds(void);
@@ -333,10 +356,11 @@ void	close_all_fds(void);
 void	close_extra_fds(void);
 int		redirect_output(char *command);
 int		redirect_input(char *command);
-char	**minienv_to_envp(t_env *minienv);
 t_env	*minienv_node(char *name, t_env *minienv);
-
-// File srcs/9.executor/executor.c was not found or accessible.
+void	free_array(char **arr);
+void	sync_env_list_str(t_ctx *ctx);
+size_t	minienv_size(t_env *minienv);
+int		is_quote(char c);
 
 // =============================================================================
 // srcs/10.builtins/
@@ -352,10 +376,7 @@ int		is_only_n(const char *str);
 int		ft_echo(char **args, t_ctx *ctx);
 int		ft_cd(char **args, t_ctx *ctx);
 int		cd_error(void);
-
 int		is_valid_env_identifier(const char *name);
-void	unset_env_var(t_ctx *ctx, const char *key);
-void	unset_string_env_var(t_ctx *ctx, const char *key);
 
 //utils builtins
 void	move_one_forward(char *str);
@@ -372,7 +393,6 @@ char	*create_keypair(char *name, char *value);
 // =============================================================================
 
 int		apply_redirections(t_cmd *cmd, int original_fds[2]);
-void	redirect_fd(int fd_to_redirect, int fd_location);
 void	restore_original_fds(int original_fds[2]);
 void	save_original_fd_in(int original_fds[2]);
 void	save_original_fd_out(int original_fds[2]);
@@ -386,18 +406,20 @@ void	cleanup_heredocs(t_cmd *cmd_list);
 // srcs/12.handle_new_env/create_new_env.c
 t_env	*find_env_var(t_env *env_list, const char *key);
 void	set_env_var(t_ctx *ctx, const char *assignment);
-void	add_new_env_var(t_ctx *ctx, char *key, char *value, \
-	const char *assignment);
+void	add_new_env_var(t_ctx *ctx, char *key, char *value);
 void	update_existing_var(t_ctx *ctx, t_env *var, const char *value);
+void	unset_env_var(t_ctx *ctx, const char *key);
 
 // srcs/12.handle_new_env/assignment_handler.c
 void	process_assignments(t_ctx *ctx, t_cmd *cmd);
 void	unset_string_env_var(t_ctx *ctx, const char *key);
-// static void	process_single_assignment(t_ctx *ctx, char *arg); // Static
 
 // =============================================================================
 // utils/
 // =============================================================================
+//utils/execute_utils.c
+void	exit_with_error(t_ctx *ctx, const char *arg, \
+	const char *msg, int code);
 
 // utils/main_utils.c
 void	no_input(void);
@@ -405,18 +427,15 @@ void	input_null(t_ctx *ctx, char **input);
 char	**dup_mtz(char **mtz);
 
 // utils/parsing_utils.c
-void	add_arg(t_cmd *cmd, char *value);
+void	add_arg(t_ctx *ctx, t_cmd *cmd, char *value);
 void	add_redir(t_cmd *cmd, t_redir_type type, char *file);
 t_cmd	*new_cmd(void);
 
 // utils/safe_split.c
-// static size_t	count_words(const char *s, char c);
-// static char	*get_next_word(t_ctx *ctx, const char *s, char c, size_t *pos);
 char	**safe_split(t_ctx *ctx, const char *s, char c);
 
 // utils/safe_utils_libft.c
 char	*safe_strdup(t_ctx *ctx, const char *s);
-char	*ft_strjoin_free(t_ctx *ctx, char *s1, char *s2);
 char	*ft_safe_strndup(t_ctx *ctx, const char *s, size_t size);
 char	*safe_substr(t_ctx *ctx, char const *s, unsigned int start, size_t len);
 char	*safe_strchr(t_ctx *ctx, const char *s, int c);
@@ -426,15 +445,19 @@ char	*safe_strnstr(t_ctx *ctx, const char *haystack, \
 char	*safe_strtrim(t_ctx *ctx, char const *s1, char const *set);
 char	*safe_strjoin(t_ctx *ctx, char const *s1, char const *s2);
 char	*safe_itoa(t_ctx *ctx, long n);
+int		ft_isalpha_upper(int c);
+void	register_alloc(t_ctx *ctx, void *ptr, t_alloc_type type);
 
 // utils/tokenizer_utils.c
-int		define_substring(char **str, const char **input, t_token_type type);
-void	get_pid_var(char **str);
+int		define_substring(t_ctx *ctx, char **str, const char **input, \
+		t_token_type type);
+void	get_pid_var(t_ctx *ctx, char **str);
+char	*get_var_value(t_ctx *ctx, const char *var_name, int *len);
 
 // =============================================================================
 // minishell.c (main program file)
 // =============================================================================
 int		main(int argc, char **argv, char **env);
-void	main_loop(t_ctx *ctx);
+t_ctx	*main_loop(t_ctx *ctx);
 
 #endif
